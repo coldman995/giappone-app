@@ -1,0 +1,130 @@
+<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#bd1f36"><link rel="manifest" href="manifest.webmanifest"><title>Giappone salvato</title>
+<style>
+:root{--red:#bd1f36;--ink:#18211d;--paper:#fffaf1;--line:#e8ddd0}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px system-ui,-apple-system,sans-serif}header{padding:42px max(20px,calc((100% - 1100px)/2));background:linear-gradient(120deg,#fff8eb,#f6d9cf)}h1{font-size:clamp(2.3rem,7vw,4.7rem);line-height:.9;margin:0;letter-spacing:-.07em}header p{max-width:590px;line-height:1.5}.dot{color:var(--red)}main{max-width:1100px;margin:auto;padding:24px 20px 70px}.filters{display:grid;gap:13px;margin:10px 0 28px}.pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:999px;cursor:pointer}.pill.active{background:var(--ink);color:white;border-color:var(--ink)}input{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;font:inherit}.summary{font-size:.9rem;color:#6b6b63;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}.card{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;min-height:146px;display:flex;flex-direction:column}.city,.tag{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.city{color:var(--red);font-weight:700}.tag{color:#5c665d;margin-top:auto}.card h2{font-size:1.07rem;margin:10px 0}.card a,.source a{color:var(--red);font-weight:650;text-decoration:none}.source{border-top:1px solid var(--line);margin-top:38px;padding-top:24px;line-height:2}.source a{margin-right:18px}.empty{grid-column:1/-1;padding:35px;text-align:center}.install{margin-top:15px;border:0;border-radius:10px;padding:10px 14px;background:var(--red);color:#fff;font-weight:700;cursor:pointer;display:none}
+</style><header><h1>Giappone<span class="dot">.</span></h1><p>I tuoi luoghi salvati, ordinati per città e cucina. Tutto il catalogo e i filtri restano disponibili offline dopo la prima apertura.</p><button class="install" id="install">Installa l’app</button></header><main><section class="filters"><input id="search" placeholder="Cerca un posto, es. ramen o Shibuya" autocomplete="off"><div class="pills" id="cities"></div><div class="pills" id="cuisines"></div></section><p class="summary" id="summary"></p><section class="grid" id="places"></section><section class="source"><strong>Liste complete su Google Maps</strong><br><a href="https://maps.app.goo.gl/BbNzzPhPZmAkwJbp8">Tokyo (71)</a><a href="https://maps.app.goo.gl/nDMjm5fgmobaRKa16">Kyoto (16)</a><a href="https://maps.app.goo.gl/83NpEXGgBAnP3oiX7">Osaka (26)</a><br><small>I collegamenti a Google Maps richiedono una connessione; il catalogo qui sopra no.</small></section></main>
+<style>@media (max-width:600px){body{font-size:16px;padding-bottom:env(safe-area-inset-bottom)}header{padding:28px 20px 23px}h1{font-size:3.25rem}header p{font-size:.94rem;margin:14px 0 0}main{padding:0 14px 48px}.filters{position:sticky;z-index:5;top:0;margin:0 -14px 17px;padding:13px 14px 11px;background:rgba(255,250,241,.96);backdrop-filter:blur(12px);box-shadow:0 8px 15px rgba(75,45,25,.06)}input{min-height:48px;padding:12px 14px;font-size:16px;border-radius:14px}.pills{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;padding:1px 2px 5px;gap:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.pills::-webkit-scrollbar{display:none}.pill{min-height:42px;white-space:nowrap;padding:9px 14px;scroll-snap-align:start;touch-action:manipulation}.summary{margin:15px 3px 12px}.grid{grid-template-columns:1fr;gap:10px}.card{min-height:0;padding:15px 16px 14px;border-radius:14px}.card h2{font-size:1.05rem;margin:7px 0 13px;line-height:1.25}.card a{display:flex;align-items:center;min-height:38px;margin-top:7px}.tag{margin-top:0}.source{margin-top:27px;padding-top:21px;line-height:2.25}.source a{display:inline-block;margin-right:13px;min-height:38px}.install{min-height:44px;margin-top:10px}}@media (min-width:601px) and (max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
+<script>
+const data=`Tokyo|Hikiniku to Come (Shibuya)|teishoku|Ristorante di syokudo e teishoku
+Tokyo|Kirimugiya Jinroku|udon|Udon
+Tokyo|Matsuyama Sushi|sushi|Sushi
+Tokyo|Steak Shinoda|carne|Steakhouse
+Tokyo|Ginza Lion Beer Hall|bar|Birreria
+Tokyo|Sosakumen Kobo Nakiryu|ramen|Ramen · stella Michelin
+Tokyo|KURA Sushi, Okachimachi|sushi|Sushi
+Tokyo|Golden Gai|da vedere|Quartiere animato
+Tokyo|FUJI SAKU|sushi|Sushi e omakase
+Tokyo|Sushidokoro Unitora|sushi|Sushi
+Tokyo|ICHIRAN Shibuya|ramen|Ramen
+Tokyo|Ramen Kamo to Negi Ueno Okachimachi|ramen|Ramen
+Tokyo|Sushi no Midori Shibuya|sushi|Sushi
+Tokyo|Manten Sushi Marunouchi|sushi|Omakase
+Tokyo|Daiwa Sushi|sushi|Sushi
+Tokyo|Ko Sushi|sushi|Sushi
+Tokyo|Gyoza no Ohsho Asakusabashi|gyoza|Cinese
+Tokyo|Sushi Oedo|sushi|Sushi a nastro
+Tokyo|AFURI Yurakucho|ramen|Ramen
+Tokyo|Shirube Shimokitazawa|izakaya|Izakaya
+Tokyo|Shirubee Shibuya|izakaya|Izakaya
+Tokyo|Oreryū Shio Ramen|ramen|Ramen
+Tokyo|Ginza Kagari - Soba|ramen|Ramen
+Tokyo|Onigiri Bongo|onigiri|Giapponese
+Tokyo|Uobei Shibuya Dogenzaka|sushi|Sushi
+Tokyo|Hamasushi Akihabara|sushi|Sushi
+Tokyo|Karashibi Miso Ramen Kikanbo|ramen|Ramen
+Tokyo|Gonpachi Nishi-Azabu|izakaya|Izakaya
+Tokyo|権八 西麻布|izakaya|Izakaya
+Tokyo|Sumatra Curry Kyōeidō|curry|Curry giapponese
+Tokyo|Kitsuneya|donburi|Donburi
+Tokyo|RAMEN MATSUI|ramen|Ramen
+Tokyo|Yakiniku Kanda Seinikuten|yakiniku|Yakiniku
+Tokyo|Asakusa Unana|unagi|Unagi
+Tokyo|Yamachou|udon|Udon
+Tokyo|Mimasu|sushi|Sushi
+Tokyo|CANTON 8|cinese|Dim sum
+Tokyo|THE WAGYU BROTHERS|carne|Hamburger wagyu
+Tokyo|Kappō Shishikura|kaiseki|Cucina tradizionale
+Tokyo|Tatsuro Sushi|sushi|Sushi
+Tokyo|Yatai Rāmen Shunya Chan|ramen|Ramen street
+Tokyo|Ikoma Sushi|sushi|Sushi
+Tokyo|Sushi Azabu|sushi|Omakase
+Tokyo|Tonkatsu Maisen Aoyama|tonkatsu|Tonkatsu
+Tokyo|cafe capyba|caffè|Animal café
+Tokyo|Matsuya Ginza|ristorante|Pranzo economico
+Tokyo|Matsushima|izakaya|Izakaya
+Tokyo|Ootoya|teishoku|Teishoku
+Tokyo|Gyoza Mania Shinagawa|gyoza|Gyoza
+Tokyo|Kakekomi Gyoza|gyoza|Gyoza
+Tokyo|Shinjuku Hikeshi Gyoza|gyoza|Gyoza
+Tokyo|Yebisu Brewery Tokyo|da vedere|Museo della birra
+Tokyo|Shanty|caffè|Caffetteria
+Tokyo|Henry's Burger Harajuku|carne|Hamburger
+Tokyo|MIYUKI|izakaya|Izakaya
+Tokyo|Canal Cafe|caffè|Caffè
+Tokyo|Ichiju Onigiri Ichiryu Manpuku|onigiri|Onigiri
+Tokyo|Tadokoro Foods Eat-in|pesce|Pesce
+Tokyo|Sweet Check|dolci|Dolci
+Tokyo|Mominoki House Ueno Shop|benessere|Massaggi
+Tokyo|Jiyugaoka|da vedere|Quartiere
+Tokyo|Izumo Ikebukuro UNAGI|unagi|Unagi
+Tokyo|Narcissus|bar|Jazz bar
+Tokyo|Asakusa Shinkurō|udon|Udon
+Tokyo|Narukiyo|izakaya|Izakaya
+Tokyo|Loup de mer|ristorante|Ristorante
+Tokyo|Hope Ken|ramen|Ramen
+Tokyo|Ōmorikaigan Matsunozushi|sushi|Sushi
+Tokyo|Shinjyuku Sushi Bar Nigirite|sushi|Sushi
+Tokyo|Megumi-suisan|sushi|Sushi
+Tokyo|Motoya Annex|ristorante|Ristorante
+Tokyo|Bentenyama Miyako Sushi|sushi|Sushi
+Kyoto|Ito Okashi|colazione|Colazione
+Kyoto|Maruman|sushi|Sushi
+Kyoto|Gyoza restaurant Kazu|gyoza|Gyoza
+Kyoto|MENYA INOICHI #3|ramen|Ramen
+Kyoto|Tendon Makino Kyoto Teramachi|tempura|Tempura donburi
+Kyoto|Gion OMAKASE SUSHI FARO|sushi|Sushi omakase
+Kyoto|Udon Shiki|udon|Udon
+Kyoto|Noodle shop Rennosuke|ramen|Ramen · stella Michelin
+Kyoto|Sushi Komatsu|sushi|Sushi
+Kyoto|music bar Beatle momo|bar|Bar
+Kyoto|Hikiniku to Come (Kyoto)|teishoku|Teishoku
+Kyoto|Ramen Nishiki Sui|ramen|Ramen
+Kyoto|やき肉玄趣 江洲|yakiniku|Yakiniku
+Kyoto|Takara Sushi|sushi|Sushi
+Kyoto|Sushizen|sushi|Sushi
+Kyoto|Kichi Kichi Omurice|omurice|Omurice
+Osaka|Kaiten Sushi Ginza Onodera|sushi|Sushi
+Osaka|Okonomiyaki Mizuno|okonomiyaki|Okonomiyaki
+Osaka|2 Chome-1-1 Nagaranaka|da vedere|Luogo salvato
+Osaka|Onigiri Gorichan Shinsekai|onigiri|Onigiri
+Osaka|Onigiri Gorichan Nankai Namba|onigiri|Onigiri
+Osaka|Unagi Kushiyaki Izumo|unagi|Unagi
+Osaka|Hotaruya|izakaya|Izakaya
+Osaka|Yakiniku Rikimaru Nanba Dotonbori|yakiniku|Yakiniku
+Osaka|Saru Shokudo Honmachi|occidentale|Cucina occidentale
+Osaka|Onigiri Bongo|onigiri|Giapponese
+Osaka|Anbai|izakaya|Izakaya
+Osaka|Kitan Hibiki|carne|Steakhouse
+Osaka|Tokito|ristorante|Ristorante
+Osaka|Ebisuchan|izakaya|Izakaya
+Osaka|Aba Koro|giapponese|Gastronomia giapponese
+Osaka|The Münch|caffè|Caffetteria
+Osaka|Uji-cha-en|tè|Tè
+Osaka|Uotoyo|unagi|Unagi
+Osaka|Zauo Fishing Restaurant Namba|izakaya|Izakaya
+Osaka|Okonomiyaki Sakaba O|okonomiyaki|Okonomiyaki
+Osaka|Kikuchi|ristorante|Ristorante
+Osaka|Onigiri Gorichan|onigiri|Onigiri
+Osaka|Shinsaibashi Sand|dolci|Dolci
+Osaka|Toyo|izakaya|Izakaya
+Osaka|Miyoshi Matsuyamachi|ristorante|Ristorante
+Osaka|Wagyu IDATEN|yakiniku|Wagyu`.split('\n').map(x=>{let[a,b,c,d]=x.split('|');return{city:a,name:b,cuisine:c,type:d}});
+let city='Tutte',cuisine='Tutte';const $=s=>document.querySelector(s);function buttons(id,values,fn){$(id).innerHTML=values.map(v=>`<button class="pill ${v==='Tutte'?'active':''}" data-v="${v}">${v}</button>`).join('');$(id).onclick=e=>{if(!e.target.dataset.v)return;fn(e.target.dataset.v);[...$(id).children].forEach(x=>x.classList.toggle('active',x.dataset.v===e.target.dataset.v));render()}}
+buttons('#cities',['Tutte',...new Set(data.map(x=>x.city))],v=>city=v);buttons('#cuisines',['Tutte',...new Set(data.map(x=>x.cuisine))].sort(),v=>cuisine=v);$('#search').oninput=render;function render(){let q=$('#search').value.toLowerCase();let r=data.filter(x=>(city==='Tutte'||x.city===city)&&(cuisine==='Tutte'||x.cuisine===cuisine)&&(`${x.name} ${x.type} ${x.cuisine}`).toLowerCase().includes(q));$('#summary').textContent=`${r.length} luoghi trovati`;$('#places').innerHTML=r.length?r.map(x=>`<article class="card"><span class="city">${x.city}</span><h2>${x.name}</h2><span class="tag">${x.type}</span><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.name+' '+x.city)}">Apri in Maps ↗</a></article>`).join(''):'<p class="empty">Nessun luogo corrisponde ai filtri.</p>'}render();let deferred;addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;$('#install').style.display='inline-block'});$('#install').onclick=()=>deferred?.prompt();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');
+const zoneRules={Tokyo:[['Shibuya','Shibuya|Harajuku|Dogenzaka|Nishi-Azabu|Gonpachi|Ichiran|Midori|Shirubee|Oreryū|Henry'],['Ginza e Marunouchi','Ginza|Yurakucho|Marunouchi|Kagari|Lion'],['Ueno, Asakusa e Akihabara','Ueno|Okachimachi|Asakusa|Akihabara|Kanda|Kitsuneya|Yamachou'],['Shinjuku e Ikebukuro','Shinjuku|Shinjyuku|Ikebukuro|Matsui|Narukiyo|Sen'],['Shinagawa e Meguro','Shinagawa|Ōmori|Yebisu|Jiyugaoka|Canal'],['Altri quartieri','']],Kyoto:[['Gion e Higashiyama','Gion|FARO|Komatsu'],['Kawaramachi e Nishiki','Teramachi|INOICHI|Nishiki|Kichi|Beatle'],['Centro Kyoto','Ito|Maruman|Kazu|Udon|Rennosuke|Hikiniku|Takara|Sushizen'],['Altri quartieri','']],Osaka:[['Namba e Dotonbori','Namba|Nanba|Dotonbori|Mizuno|Shinsaibashi|Zauo'],['Shinsekai e Tennoji','Shinsekai|Gorichan|Izumo'],['Umeda e Kita','Kita|Nagaranaka|Kitan'],['Honmachi e centro','Honmachi|Hotaruya|Anbai|Ebisuchan|Miyoshi'],['Altri quartieri','']]};
+function neighborhoodOf(p){let rules=zoneRules[p.city]||[];for(const[n,words]of rules){if(!words||words.split('|').some(w=>p.name.toLowerCase().includes(w.toLowerCase())))return n}return 'Altri quartieri'}data.forEach(p=>p.neighborhood=neighborhoodOf(p));let neighborhood='Tutti';document.querySelector('#cuisines').insertAdjacentHTML('afterend','<div class="pills" id="neighborhoods" aria-label="Filtra per quartiere"></div>');
+function refreshNeighborhoods(){let values=city==='Tutte'?['Tutti']:[ 'Tutti',...new Set(data.filter(p=>p.city===city).map(p=>p.neighborhood))];if(!values.includes(neighborhood))neighborhood='Tutti';document.querySelector('#neighborhoods').innerHTML=values.map(v=>`<button class="pill ${v===neighborhood?'active':''}" data-v="${v}">${v}</button>`).join('')}
+function renderWithNeighborhood(){let q=document.querySelector('#search').value.toLowerCase(),r=data.filter(p=>(city==='Tutte'||p.city===city)&&(cuisine==='Tutte'||p.cuisine===cuisine)&&(neighborhood==='Tutti'||p.neighborhood===neighborhood)&&(`${p.name} ${p.type} ${p.cuisine} ${p.neighborhood}`).toLowerCase().includes(q));document.querySelector('#summary').textContent=`${r.length} luoghi trovati`;document.querySelector('#places').innerHTML=r.length?r.map(p=>`<article class="card"><span class="city">${p.city} · ${p.neighborhood}</span><h2>${p.name}</h2><span class="tag">${p.type}</span><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+' '+p.city)}">Apri in Maps ↗</a></article>`).join(''):'<p class="empty">Nessun luogo corrisponde ai filtri.</p>'}
+document.querySelector('#cities').addEventListener('click',()=>{refreshNeighborhoods();renderWithNeighborhood()});document.querySelector('#cuisines').addEventListener('click',renderWithNeighborhood);document.querySelector('#neighborhoods').addEventListener('click',e=>{if(!e.target.dataset.v)return;neighborhood=e.target.dataset.v;[...e.currentTarget.children].forEach(x=>x.classList.toggle('active',x.dataset.v===neighborhood));renderWithNeighborhood()});document.querySelector('#search').oninput=renderWithNeighborhood;refreshNeighborhoods();renderWithNeighborhood();
+document.head.insertAdjacentHTML('beforeend','<style>.filter-label{display:block;margin:4px 2px -5px;font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b625a}@media(max-width:600px){.filter-label{margin-top:3px}}</style>');[['#cities','Città'],['#cuisines','Tipo cibo'],['#neighborhoods','Quartieri']].forEach(([selector,label])=>document.querySelector(selector).insertAdjacentHTML('beforebegin',`<span class="filter-label">${label}</span>`));
+const notes={'Tokyo|Sosakumen Kobo Nakiryu':'Ramen stella Michelin','Tokyo|KURA Sushi, Okachimachi':'Buona catena di sushi','Tokyo|Golden Gai':'Quartiere animato dove andare la sera','Tokyo|FUJI SAKU':'Sushi buono e omakase','Tokyo|ICHIRAN Shibuya':'Buon ramen','Tokyo|Ramen Kamo to Negi Ueno Okachimachi':'Buon ramen','Tokyo|Sushi no Midori Shibuya':'Sushi economico','Tokyo|Manten Sushi Marunouchi':'Omakase: prezzo medio 40 euro, 23 piatti','Tokyo|Daiwa Sushi':'Ottimo sushi','Tokyo|Ko Sushi':'Sushi ottimo qualità prezzo','Tokyo|Gyoza no Ohsho Asakusabashi':'Economico e popolare','Tokyo|Sushi Oedo':'Catena sushi a nastro','Tokyo|AFURI Yurakucho':'Catena ramen buona','Tokyo|Shirubee Shibuya':'Da provare','Tokyo|Ginza Kagari - Soba':'Local ramen','Tokyo|Matsuya Ginza':'Buona catena per pranzo economico','Tokyo|Ootoya':'Catena buona ed economica','Tokyo|Sumatra Curry Kyōeidō':'Curry nero da provare','Tokyo|RAMEN MATSUI':'Top ramen, economico: prenotare 3 giorni in anticipo','Tokyo|Ichiju Onigiri Ichiryu Manpuku':'Locals place · onigiri','Tokyo|Yamachou':'Noodle · local place','Tokyo|Tadokoro Foods Eat-in':'Pasta mentaiko · locals place','Tokyo|Mimasu':'Locals place','Tokyo|Jiyugaoka':'Locals place','Tokyo|Izumo Ikebukuro UNAGI':'Unagi da provare','Tokyo|Ikoma Sushi':'Ci vanno i locals','Tokyo|Sushi Azabu':'Cheap omakase','Kyoto|Gyoza restaurant Kazu':'Gyoza buoni','Kyoto|Noodle shop Rennosuke':'Star Michelin ramen','Kyoto|Takara Sushi':'5 posti · locals place','Osaka|Onigiri Gorichan Shinsekai':'Top onigiri','Osaka|Onigiri Gorichan Nankai Namba':'Onigiri Osaka','Osaka|Unagi Kushiyaki Izumo':'Unagi buono','Osaka|Hotaruya':'Izakaya locals','Osaka|Yakiniku Rikimaru Nanba Dotonbori':'All you can eat wagyu','Osaka|Saru Shokudo Honmachi':'Ristorante locals','Osaka|Aba Koro':'Gastronomia tradizionale','Osaka|The Münch':'Locals place · caffè','Osaka|Uji-cha-en':'Locals place · tè','Osaka|Uotoyo':'Local place'};data.forEach(p=>p.note=notes[`${p.city}|${p.name}`]||'');document.head.insertAdjacentHTML('beforeend','<style>.note{margin:9px 0 0;padding-left:10px;border-left:2px solid #bd1f36;color:#555d56;font-size:.88rem;line-height:1.35}@media(max-width:600px){.note{font-size:.84rem}}</style>');function renderWithNotes(){renderWithNeighborhood();let q=document.querySelector('#search').value.toLowerCase(),visible=data.filter(p=>(city==='Tutte'||p.city===city)&&(cuisine==='Tutte'||p.cuisine===cuisine)&&(neighborhood==='Tutti'||p.neighborhood===neighborhood)&&(`${p.name} ${p.type} ${p.cuisine} ${p.neighborhood} ${p.note}`).toLowerCase().includes(q));document.querySelector('#summary').textContent=`${visible.length} luoghi trovati`;document.querySelectorAll('#places .card').forEach((card,i)=>{if(visible[i].note)card.querySelector('.tag').insertAdjacentHTML('afterend',`<p class="note">${visible[i].note}</p>`)});}document.querySelector('#cities').addEventListener('click',renderWithNotes);document.querySelector('#cuisines').addEventListener('click',renderWithNotes);document.querySelector('#neighborhoods').addEventListener('click',renderWithNotes);document.querySelector('#search').oninput=renderWithNotes;renderWithNotes();
+</script></html>
